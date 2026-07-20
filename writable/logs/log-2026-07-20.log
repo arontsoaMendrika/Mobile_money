@@ -333,3 +333,7 @@ in SYSTEMPATH/Database/SQLite3/Connection.php on line 164.
  9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
 10 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
 11 SYSTEMPATH/rewrite.php(44): require_once('/home/mandresy/Documents/S4/Web/examen_final/Mobile_money/public/index.php')
+CRITICAL - 2026-07-20 13:48:14 --> ErrorException: Cannot redeclare App\Controllers\Admin\Operateurs::updateOperateur()
+[Method: GET, Route: admin/operateurs]
+in APPPATH/Controllers/Admin/Operateurs.php on line 53.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()

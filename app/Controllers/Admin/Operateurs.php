@@ -49,16 +49,4 @@ class Operateurs extends BaseController
         \Config\Database::connect()->table('prefixe')->delete(['id' => $id]);
         return redirect()->back()->with('message', 'Préfixe supprimé.');
     }
-
-    public function updateOperateur($id)
-    {
-    $operateurModel = new OperateurModel();
-    $taux = $this->request->getPost('commission_pct'); 
-
-    $operateurModel->update($id, [
-        'commission_pct' => $taux
-    ]);
-
-    return redirect()->back()->with('message', 'Commission mise à jour.');
-    }
 }
