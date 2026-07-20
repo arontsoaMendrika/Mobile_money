@@ -1,5 +1,4 @@
-CREATE DATABASE mobile;
-USE mobile;
+
 CREATE TABLE configuration (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     cle VARCHAR(50) NOT NULL UNIQUE,
@@ -20,7 +19,7 @@ CREATE TABLE compte_client (
     solde REAL NOT NULL DEFAULT 0.0
 );
 
-CREATE TABLE transaction (
+CREATE TABLE transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     type_operation VARCHAR(20) NOT NULL, -- 'depot', 'retrait' ou 'transfert'
     expediteur VARCHAR(15),              -- NULL si c'est un dépôt
