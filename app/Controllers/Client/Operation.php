@@ -140,4 +140,34 @@ public function transfert()
     return redirect()->to('dashboard')->with('message', 
         'Transfert de ' . number_format($montant, 0, ',', ' ') . ' Ar vers le ' . $destinataire . ' réussi !');
 }
+
+
+public function formulaireTransfert()
+{
+    
+    $numero = session('numero');
+    if (!$numero) return redirect()->to('/');   
+
+ 
+    $compteModel = new CompteModel();
+    $data['compte'] = $compteModel->find($numero);
+
+  
+    return view('clients/transfert', $data);
+}
+
+public function formulaireDepot()
+{
+   
+    $numero = session('numero');
+    if (!$numero) return redirect()->to('/');   
+
+  
+    $compteModel = new CompteModel();
+    $data['compte'] = $compteModel->find($numero);
+
+   
+    return view('clients/depot', $data);
+}
+
 }
