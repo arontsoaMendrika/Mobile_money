@@ -10,7 +10,7 @@
       <form method="post" action="<?= site_url('login') ?>">
         <?= csrf_field() ?>
         <label class="form-label">Numéro de téléphone</label>
-        <input type="text" name="numero" class="form-control mb-3" placeholder="0331234567" required>
+        <input type="text" name="numero" class="form-control mb-3" placeholder="0331234567" value="0331234567" required>
         <button class="btn btn-primary w-100">Se connecter</button>
       </form>
       <a href="<?= site_url('admin') ?>" class="btn btn-outline-secondary w-100 mt-2">Espace Admin</a>
