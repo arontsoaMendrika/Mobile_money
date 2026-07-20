@@ -24,4 +24,10 @@ $routes->group('admin', function($routes) {
     $routes->post('baremes/add', 'Admin\Config::addBareme');
     $routes->get('baremes/delete/(:num)', 'Admin\Config::deleteBareme/$1');
     $routes->get('dashboard', 'Admin\Dashboard::index');
+    $routes->get('operateurs', 'Admin\Operateurs::index');
+    $routes->post('operateurs/add', 'Admin\Operateurs::addOperateur');
+    $routes->post('operateurs/update/(:num)', 'Admin\Operateurs::updateOperateur/$1');
+    $routes->post('prefixe/add', 'Admin\Operateurs::addPrefixe');
+    $routes->get('prefixe/delete/(:num)', 'Admin\Operateurs::deletePrefixe/$1');
+    $routes->get('reversements', 'Admin\Rapport::reversements');
 });
