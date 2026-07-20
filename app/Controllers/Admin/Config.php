@@ -62,17 +62,5 @@ class Config extends BaseController
        return view('admin/operateurs', ['operateurs' => $listeOperateurs]);
     }
 
-    public function saveCommissions()
-    {
-        $operateurModel = new OperateurModel();
-        $commissions = $this->request->getPost('commissions');
 
-        if($commissions){
-            foreach($commissions as $id => $taux){
-                $operateurModel->update($id, ['commission_pct' => $taux]);
-            }
-        }
-
-        return redirect()->back()->with('message', 'Commissions mises à jour.');
-    }
 }
