@@ -12,8 +12,15 @@ class Dashboard extends BaseController
         $db = Database::connect();
 
         $gainParType = $db->query(
-            "SELECT type_operation, COUNT(*) AS nb, SUM(frais) AS total_frais, SUM(montant) AS total_montant
-             FROM transactions GROUP BY type_operation"
+            "SELECT 
+                type_operation, 
+                COUNT(*) AS nb, 
+                SUM(montant) AS total_montant, 
+                SUM(frais) AS total_frais,
+                SUM(CASE WHEN id_operateur_dest IS NULL THEN frais ELSE (frais - commission) END) AS gain_interne,
+                SUM(commission) AS gain_externe
+             FROM transactions 
+             GROUP BY type_operation"
         )->getResultArray();
 
         return view('admin/dashboard', [
