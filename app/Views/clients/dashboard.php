@@ -2,18 +2,18 @@
 <?= $this->section('content') ?>
 <nav class="navbar navbar-dark bg-primary mb-4">
   <div class="container">
-    <span class="navbar-brand"><?= esc($numero) ?></span>
+    <span class="navbar-brand"><?= $numero ?></span>
     <a href="<?= site_url('logout') ?>" class="btn btn-sm btn-light">Déconnexion</a>
   </div>
 </nav>
 
 <div class="container">
-  <?php if (session('message')): ?>
-    <div class="alert alert-success"><?= esc(session('message')) ?></div>
-  <?php endif; ?>
-  <?php if (session('error')): ?>
-    <div class="alert alert-danger"><?= esc(session('error')) ?></div>
-  <?php endif; ?>
+  <?php if (session('message')) { ?>
+    <div class="alert alert-success"><?= session('message') ?></div>
+  <?php } ?>
+  <?php if (session('error')) { ?>
+    <div class="alert alert-danger"><?= session('error') ?></div>
+  <?php } ?>
 
   <div class="card mb-4 text-center">
     <div class="card-body">
@@ -33,15 +33,15 @@
     <table class="table table-sm mb-0">
       <thead><tr><th>Date</th><th>Type</th><th>Montant</th><th>Frais</th><th>Contrepartie</th></tr></thead>
       <tbody>
-      <?php foreach ($historique as $t): ?>
+      <?php foreach ($historique as $t) { ?>
         <tr>
-          <td><?= esc($t['date_creation']) ?></td>
-          <td><span class="badge bg-secondary"><?= esc($t['type_operation']) ?></span></td>
+          <td><?= $t['date_creation'] ?></td>
+          <td><span class="badge bg-secondary"><?= $t['type_operation'] ?></span></td>
           <td><?= number_format($t['montant'], 0, ',', ' ') ?> Ar</td>
           <td><?= number_format($t['frais'], 0, ',', ' ') ?> Ar</td>
-          <td><?= esc($t['expediteur'] === $numero ? $t['destinataire'] : $t['expediteur']) ?></td>
+          <td><?= $t['expediteur'] === $numero ? $t['destinataire'] : $t['expediteur'] ?></td>
         </tr>
-      <?php endforeach; ?>
+      <?php } ?>
       </tbody>
     </table>
   </div>

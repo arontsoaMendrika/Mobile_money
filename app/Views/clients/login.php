@@ -4,9 +4,9 @@
   <div class="card shadow-sm">
     <div class="card-body p-4">
       <h4 class="mb-4 text-center">Mobile Money</h4>
-      <?php if (session('error')): ?>
-        <div class="alert alert-danger"><?= esc(session('error')) ?></div>
-      <?php endif; ?>
+      <?php if (session('error')) { ?>
+        <div class="alert alert-danger"><?= session('error') ?></div>
+      <?php } ?>
       <form method="post" action="<?= site_url('login') ?>">
         <?= csrf_field() ?>
         <label class="form-label">Numéro de téléphone</label>

@@ -10,3 +10,13 @@ $routes->get('/', 'Client\Auth::index');
 $routes->post('login', 'Client\Auth::login');
 $routes->get('logout', 'Client\Auth::logout');
 $routes->get('dashboard', 'Client\Operation::dashboard');
+$routes->get('retrait', 'Client\Operation::retraitForm');
+$routes->post('retrait', 'Client\Operation::retrait');
+$routes->group('admin', function($routes) {
+    $routes->get('prefixes', 'Admin\Config::prefixes');
+    $routes->post('prefixes', 'Admin\Config::savePrefixes');
+    $routes->get('baremes', 'Admin\Config::baremes');
+    $routes->post('baremes/add', 'Admin\Config::addBareme');
+    $routes->get('baremes/delete/(:num)', 'Admin\Config::deleteBareme/$1');
+    $routes->get('dashboard', 'Admin\Dashboard::index');
+});

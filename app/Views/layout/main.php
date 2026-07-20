@@ -8,20 +8,20 @@
 <body class="bg-light">
 <nav class="navbar navbar-dark bg-dark px-3">
   <span class="navbar-brand">Mobile Money</span>
-  <?php if (session()->get('numero')): ?>
+  <?php if (session()->get('numero')) { ?>
     <span class="text-white">
       <?= session()->get('numero') ?>
       <a href="/logout" class="btn btn-sm btn-outline-light ms-2">Déconnexion</a>
     </span>
-  <?php endif; ?>
+  <?php } ?>
 </nav>
 <div class="container py-4">
-  <?php if (session()->getFlashdata('error')): ?>
+  <?php if (session()->getFlashdata('error')) { ?>
     <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-  <?php endif; ?>
-  <?php if (session()->getFlashdata('success')): ?>
+  <?php } ?>
+  <?php if (session()->getFlashdata('success')) { ?>
     <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
-  <?php endif; ?>
+  <?php } ?>
   <?= $this->renderSection('content') ?>
 </div>
 </body>
