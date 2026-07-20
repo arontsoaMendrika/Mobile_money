@@ -12,6 +12,10 @@ $routes->get('logout', 'Client\Auth::logout');
 $routes->get('dashboard', 'Client\Operation::dashboard');
 $routes->get('retrait', 'Client\Operation::retraitForm');
 $routes->post('retrait', 'Client\Operation::retrait');
+$routes->get('depot', 'Client\Operation::formulaireDepot');
+$routes->post('depot', 'Client\Operation::depot');
+$routes->get('transfert', 'Client\Operation::formulaireTransfert');
+$routes->post('transfert', 'Client\Operation::transfert');
 $routes->group('admin', function($routes) {
     $routes->get('prefixes', 'Admin\Config::prefixes');
     $routes->post('prefixes', 'Admin\Config::savePrefixes');
