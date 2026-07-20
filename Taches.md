@@ -40,21 +40,21 @@
 #### Tâches de Mandresy :
 - [x] Modélisation et création des nouvelles tables operateur et prefixe dans le script SQL.
 - [x] Implémentation de la logique métier dans OperateurModel.php (findByNumero, estInterne, commission).
-- [ ] Interface et situation des montants cumulés à envoyer à chaque opérateur tiers.
+- [x] Interface et situation des montants cumulés à envoyer à chaque opérateur tiers.
 
 #### Tâches de Mendrika :
 - [x] Création et configuration initiale du modèle PrefixeModel.php.
 - [x] Mise à jour du contrôleur Config.php avec la méthode operateurs() pour charger les données des commissions.
-- [ ] [EN COURS] Création de la méthode saveCommissions() dans le contrôleur Config.php pour sauvegarder les taux modifiés par l'administrateur.
-- [ ] Conception de la vue d'administration admin/operateurs.php pour la mise à jour des commissions.
+- [x] Création de la méthode saveCommissions() dans le contrôleur Config.php pour sauvegarder les taux modifiés par l'administrateur.
+- [x] Conception de la vue d'administration admin/operateurs.php pour la mise à jour des commissions.
 - [ ] Modification de la page "Situation gain" dans Dashboard.php pour séparer les gains internes et inter-opérateurs.
 
 ### Côté Client (Fonctionnalités avancées)
 
 #### Tâches de Mandresy :
-- [ ] Intégration de l'option de case à cocher "Inclure les frais de retrait" dans le formulaire de transfert.
-- [ ] Adaptation du contrôleur de transfert pour calculer et déduire les frais du montant reçu.
+- [x] Intégration de l'option de case à cocher "Inclure les frais de retrait" dans le formulaire de transfert.
+- [x] Adaptation du contrôleur de transfert pour calculer et déduire les frais du montant reçu.
 
 #### Tâches de Mendrika :
-- [ ] Modification de la vue du formulaire de transfert pour autoriser la saisie de numéros multiples séparés par des virgules.
+- [x] Modification de la vue du formulaire de transfert pour autoriser la saisie de numéros multiples séparés par des virgules.
 - [ ] Développement de la logique d'envoi multiple (nettoyage de la chaîne, division équitable du montant et boucle de transactions).

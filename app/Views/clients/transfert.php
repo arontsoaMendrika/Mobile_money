@@ -10,11 +10,11 @@
 
       <form method="post" action="<?= site_url('transfert') ?>">
         <?= csrf_field() ?>
-
-        <div class="mb-3">
-          <label class="form-label">Numéro du destinataire</label>
-          <input type="text" name="destinataire" class="form-control" placeholder="Ex: 033XXXXXXXX" required>
-        </div>
+        
+     <div class="mb-3">
+        <label class="form-label">Numéro(s) du destinataire (séparés par des virgules)</label>
+        <input type="text" name="destinataire" class="form-control" placeholder="Ex: 033XXXXXXXX, 032XXXXXXXX" required>
+    </div>
 
         <div class="mb-3">
           <label class="form-label">Montant à envoyer (Ar)</label>

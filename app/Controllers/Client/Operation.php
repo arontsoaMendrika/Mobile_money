@@ -106,46 +106,86 @@ public function transfert()
     $numero = session('numero');
     if (!$numero) return redirect()->to('/');   
 
-    $destinataire = $this->request->getPost('destinataire');
-    $montant = (float) $this->request->getPost('montant');
+    $destinataireInput = $this->request->getPost('destinataire');
+    $montantTotal = (float) $this->request->getPost('montant');
 
-    if($montant <= 0){
+    if($montantTotal <= 0){
         return redirect()->back()->with('error', 'Montant invalide.');
     }
 
-    if($destinataire === $numero){
-        return redirect()->back()->with('error', 'Vous ne pouvez pas transférer à vous-même.');
+
+    $destinataires = array_filter(array_map('trim', explode(',', $destinataireInput)));
+    $nbDestinataires = count($destinataires);
+
+    if ($nbDestinataires === 0) {
+        return redirect()->back()->with('error', 'Veuillez saisir au moins un destinataire.');
     }
 
+    
+    $montantParPersonne = $montantTotal / $nbDestinataires;
+
     $compteModel = new CompteModel();
-    $compteDestinataire = $compteModel->findByNumero($destinataire);
-    if(!$compteDestinataire){
-        return redirect()->back()->with('error', 'Le destinataire n\'existe pas.');
+    $operateurModel = new OperateurModel();
+    $transactionModel = new TransactionModel();
+
+   
+    $operateurInitialId = null;
+    foreach ($destinataires as $dest) {
+        if($dest === $numero){
+            return redirect()->back()->with('error', 'Vous ne pouvez pas inclure votre propre numéro.');
+        }
+
+        $compteDestinataire = $compteModel->findByNumero($dest);
+        if(!$compteDestinataire){
+            return redirect()->back()->with('error', "Le destinataire {$dest} n'existe pas.");
+        }
+
+       
+        $operateurDest = $operateurModel->findByNumero($dest);
+        $currentOperateurId = $operateurDest['id'] ?? null;
+        
+        if ($operateurInitialId === null) {
+            $operateurInitialId = $currentOperateurId;
+        } elseif ($operateurInitialId !== $currentOperateurId) {
+            return redirect()->back()->with('error', 'Tous les destinataires doivent appartenir au même opérateur.');
+        }
     }
 
     $compteExpediteur = $compteModel->findByNumero($numero);
-    if($compteExpediteur['solde'] < $montant){
-        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer le transfert.');
+    if($compteExpediteur['solde'] < $montantTotal){
+        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer l\'envoi multiple.');
     }
 
-    $operateurModel = new OperateurModel();
-    $operateurDest = $operateurModel->findByNumero($destinataire);
-    $commission = $operateurModel->commission($destinataire, $montant);
 
-    $compteModel->debiter($numero, $montant);
-    $compteModel->crediter($destinataire, $montant);
-    (new TransactionModel())->insert([
-        'type_operation'    => 'transfert',
-        'expediteur'        => $numero,
-        'destinataire'      => $destinataire,
-        'montant'           => $montant,
-        'frais'             => 0,
-        'id_operateur_dest' => $operateurDest['id'] ?? null,
-        'commission'        => $commission,
-    ]);
+    $db = Database::connect();
+    $db->transStart();
+
+    foreach ($destinataires as $dest) {
+        $operateurDest = $operateurModel->findByNumero($dest);
+        $commission = $operateurModel->commission($dest, $montantParPersonne);
+
+        $compteModel->debiter($numero, $montantParPersonne);
+        $compteModel->crediter($dest, $montantParPersonne);
+        
+        $transactionModel->insert([
+            'type_operation'    => 'transfert',
+            'expediteur'        => $numero,
+            'destinataire'      => $dest,
+            'montant'           => $montantParPersonne,
+            'frais'             => 0, 
+            'id_operateur_dest' => $operateurDest['id'] ?? null,
+            'commission'        => $commission,
+        ]);
+    }
+
+    $db->transComplete();
+
+    if ($db->transStatus() === false) {
+        return redirect()->back()->with('error', 'Erreur lors de l\'envoi multiple.');
+    }
 
     return redirect()->to('dashboard')->with('message', 
-        'Transfert de ' . number_format($montant, 0, ',', ' ') . ' Ar vers le ' . $destinataire . ' réussi !');
+        'Envoi multiple de ' . number_format($montantTotal, 0, ',', ' ') . ' Ar réussi vers ' . $nbDestinataires . ' destinataire(s) !');
 }
 
 
