@@ -74,4 +74,29 @@ public function retrait()
     return redirect()->to('dashboard')->with('message',
         'Retrait de ' . number_format($montant, 0, ',', ' ') . ' Ar effectué (frais : ' . $frais . ' Ar).');
 }
+
+public function depot()
+{
+    $numero = session('numero');
+    if (!$numero) return redirect()->to('/');   
+    
+    $montant = (float) $this->request->getPost('montant');
+
+    if($montant <= 0){
+        return redirect()->back()->with('error', 'Montant invalide.');
+    }
+
+    $compteModel = new CompteModel();
+    $compteModel->crediter($numero, $montant);
+    (new TransactionModel())->insert([
+        'type_operation' => 'depot',
+        'expediteur'     => $numero,
+        'destinataire'   => null,
+        'montant'        => $montant,
+        'frais'          => 0,
+    ]);
+
+    return redirect()->to('dashboard')->with('message',
+        'Dépôt de ' . number_format($montant, 0, ',', ' ') . ' Ar effectué.');
+}
 }
