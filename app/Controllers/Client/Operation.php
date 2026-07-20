@@ -4,6 +4,7 @@ use App\Controllers\BaseController;
 use App\Models\CompteModel;
 use App\Models\TransactionModel;
 use App\Models\BaremeModel;
+use App\Models\OperateurModel;
 use Config\Database;
 
 class Operation extends BaseController
@@ -105,40 +106,111 @@ public function transfert()
     $numero = session('numero');
     if (!$numero) return redirect()->to('/');   
 
-    $destinataire = $this->request->getPost('destinataire');
-    $montant = (float) $this->request->getPost('montant');
+    $destinataireInput = $this->request->getPost('destinataire');
+    $montantTotal = (float) $this->request->getPost('montant');
 
-    if($montant <= 0){
+    $inclureFrais = $this->request->getPost('inclure_frais') === '1';
+
+    if($montantTotal <= 0){
         return redirect()->back()->with('error', 'Montant invalide.');
     }
 
-    if($destinataire === $numero){
-        return redirect()->back()->with('error', 'Vous ne pouvez pas transférer à vous-même.');
+    $destinataires = array_filter(array_map('trim', explode(',', $destinataireInput)));
+    $nbDestinataires = count($destinataires);
+
+    if ($nbDestinataires === 0) {
+        return redirect()->back()->with('error', 'Veuillez saisir au moins un destinataire.');
     }
+
+    $montantParPersonne = $montantTotal / $nbDestinataires;
 
     $compteModel = new CompteModel();
-    $compteDestinataire = $compteModel->findByNumero($destinataire);
-    if(!$compteDestinataire){
-        return redirect()->back()->with('error', 'Le destinataire n\'existe pas.');
+    $operateurModel = new OperateurModel();
+    $transactionModel = new TransactionModel();
+    $baremeModel = new BaremeModel();
+
+    $operateurInitialId = null;
+    $estInterne = false;
+
+  
+    foreach ($destinataires as $dest) {
+        if($dest === $numero){
+            return redirect()->back()->with('error', 'Vous ne pouvez pas inclure votre propre numéro.');
+        }
+
+        $compteDestinataire = $compteModel->findByNumero($dest);
+        if(!$compteDestinataire){
+            return redirect()->back()->with('error', "Le destinataire {$dest} n'existe pas.");
+        }
+
+        $operateurDest = $operateurModel->findByNumero($dest);
+        $currentOperateurId = $operateurDest['id'] ?? null;
+        
+        if ($operateurInitialId === null) {
+            $operateurInitialId = $currentOperateurId;
+       
+            $estInterne = isset($operateurDest['est_interne']) && $operateurDest['est_interne'] == 1;
+        } elseif ($operateurInitialId !== $currentOperateurId) {
+            return redirect()->back()->with('error', 'Tous les destinataires doivent appartenir au même opérateur.');
+        }
     }
+
+
+    $fraisRetraitParPersonne = 0;
+    if ($inclureFrais) {
+        if ($estInterne) {
+ 
+            $fraisRetraitParPersonne = $baremeModel->calculerFrais('retrait', $montantParPersonne);
+        } else {
+            return redirect()->back()->with('error', 'L\'inclusion des frais n\'est pas disponible pour les autres opérateurs.');
+        }
+    }
+
+   
+    $totalADebiter = $montantTotal + ($fraisRetraitParPersonne * $nbDestinataires);
 
     $compteExpediteur = $compteModel->findByNumero($numero);
-    if($compteExpediteur['solde'] < $montant){
-        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer le transfert.');
+    if($compteExpediteur['solde'] < $totalADebiter){
+        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer l\'envoi (Montant + Frais requis).');
     }
 
-    $compteModel->debiter($numero, $montant);
-    $compteModel->crediter($destinataire, $montant);
-    (new TransactionModel())->insert([
-        'type_operation' => 'transfert',
-        'expediteur'     => $numero,
-        'destinataire'   => $destinataire,
-        'montant'        => $montant,
-        'frais'          => 0,
-    ]);
 
-    return redirect()->to('dashboard')->with('message', 
-        'Transfert de ' . number_format($montant, 0, ',', ' ') . ' Ar vers le ' . $destinataire . ' réussi !');
+    $db = Database::connect();
+    $db->transStart();
+
+    foreach ($destinataires as $dest) {
+        $operateurDest = $operateurModel->findByNumero($dest);
+        $commission = $operateurModel->commission($dest, $montantParPersonne);
+
+       
+        $compteModel->debiter($numero, $montantParPersonne + $fraisRetraitParPersonne);
+        
+
+        $compteModel->crediter($dest, $montantParPersonne);
+        
+        $transactionModel->insert([
+            'type_operation'    => 'transfert',
+            'expediteur'        => $numero,
+            'destinataire'      => $dest,
+            'montant'           => $montantParPersonne,
+            'frais'             => $fraisRetraitParPersonne, 
+            'id_operateur_dest' => $operateurDest['id'] ?? null,
+            'commission'        => $commission,
+        ]);
+    }
+
+    $db->transComplete();
+
+    if ($db->transStatus() === false) {
+        return redirect()->back()->with('error', 'Erreur lors de l\'envoi multiple.');
+    }
+
+    $msgSuccess = 'Envoi multiple réussi ! ';
+    if ($inclureFrais) {
+        $msgSuccess .= 'Les frais de retrait ont été pris en charge.';
+    }
+
+    return redirect()->to('dashboard')->with('message', $msgSuccess);
 }
 
 

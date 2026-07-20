@@ -1,19 +1,5 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
-<nav class="navbar navbar-dark bg-primary mb-4">
-  <div class="container">
-    <span class="navbar-brand"><?= $numero ?></span>
-    <a href="<?= site_url('logout') ?>" class="btn btn-sm btn-light">Déconnexion</a>
-  </div>
-</nav>
-
-<div class="container">
-  <?php if (session('message')) { ?>
-    <div class="alert alert-success"><?= session('message') ?></div>
-  <?php } ?>
-  <?php if (session('error')) { ?>
-    <div class="alert alert-danger"><?= session('error') ?></div>
-  <?php } ?>
 
   <div class="card mb-4 text-center">
     <div class="card-body">
@@ -23,13 +9,13 @@
   </div>
 
   <div class="row g-3 mb-4">
-    <div class="col-md-4"><a href="<?= site_url('depot') ?>" class="btn btn-outline-primary w-100 py-3">Dépôt</a></div>
-    <div class="col-md-4"><a href="<?= site_url('retrait') ?>" class="btn btn-outline-warning w-100 py-3">Retrait</a></div>
-    <div class="col-md-4"><a href="<?= site_url('transfert') ?>" class="btn btn-outline-danger w-100 py-3">Transfert</a></div>
+    <div class="col-md-4"><a href="<?= site_url('depot') ?>" class="btn btn-outline-primary w-100 action-btn"><i class="fa-solid fa-arrow-down"></i>Dépôt</a></div>
+    <div class="col-md-4"><a href="<?= site_url('retrait') ?>" class="btn btn-outline-warning w-100 action-btn"><i class="fa-solid fa-arrow-up"></i>Retrait</a></div>
+    <div class="col-md-4"><a href="<?= site_url('transfert') ?>" class="btn btn-outline-danger w-100 action-btn"><i class="fa-solid fa-right-left"></i>Transfert</a></div>
   </div>
 
   <div class="card">
-    <div class="card-header">Historique</div>
+    <div class="card-header"><i class="fa-solid fa-clock-rotate-left me-1"></i>Historique</div>
     <table class="table table-sm mb-0">
       <thead><tr><th>Date</th><th>Type</th><th>Montant</th><th>Frais</th><th>Contrepartie</th></tr></thead>
       <tbody>
@@ -45,5 +31,4 @@
       </tbody>
     </table>
   </div>
-</div>
 <?= $this->endSection() ?>

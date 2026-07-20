@@ -1,10 +1,7 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
 <div class="container mt-5">
-  <h4 class="mb-4">Barèmes de frais</h4>
-  <?php if (session('message')) { ?>
-    <div class="alert alert-success"><?= session('message') ?></div>
-  <?php } ?>
+  <h4 class="mb-4"><i class="fa-solid fa-list-ol me-2"></i>Barèmes de frais</h4>
 
   <div class="card mb-4">
     <div class="card-body">
@@ -20,7 +17,7 @@
         <div class="col-md-2"><label class="form-label">Min</label><input type="number" name="montant_min" class="form-control" required></div>
         <div class="col-md-2"><label class="form-label">Max</label><input type="number" name="montant_max" class="form-control" placeholder="vide = illimité"></div>
         <div class="col-md-2"><label class="form-label">Frais</label><input type="number" name="frais" class="form-control" required></div>
-        <div class="col-md-3"><button class="btn btn-primary w-100">Ajouter</button></div>
+        <div class="col-md-3"><button class="btn btn-primary w-100"><i class="fa-solid fa-plus me-1"></i>Ajouter</button></div>
       </form>
     </div>
   </div>
@@ -38,7 +35,7 @@
               <td><?= number_format($b['montant_min'],0,',',' ') ?></td>
               <td><?= $b['montant_max'] ? number_format($b['montant_max'],0,',',' ') : '&infin;' ?></td>
               <td><?= number_format($b['frais'],0,',',' ') ?> Ar</td>
-              <td><a href="<?= site_url('admin/baremes/delete/'.$b['id']) ?>" class="btn btn-sm btn-outline-danger">×</a></td>
+              <td><a href="<?= site_url('admin/baremes/delete/'.$b['id']) ?>" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a></td>
             </tr>
           <?php } ?>
           </tbody>
