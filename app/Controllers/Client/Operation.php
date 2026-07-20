@@ -99,4 +99,45 @@ public function depot()
     return redirect()->to('dashboard')->with('message',
         'Dépôt de ' . number_format($montant, 0, ',', ' ') . ' Ar effectué.');
 }
+
+public function transfert()
+{
+    $numero = session('numero');
+    if (!$numero) return redirect()->to('/');   
+
+    $destinataire = $this->request->getPost('destinataire');
+    $montant = (float) $this->request->getPost('montant');
+
+    if($montant <= 0){
+        return redirect()->back()->with('error', 'Montant invalide.');
+    }
+
+    if($destinataire === $numero){
+        return redirect()->back()->with('error', 'Vous ne pouvez pas transférer à vous-même.');
+    }
+
+    $compteModel = new CompteModel();
+    $compteDestinataire = $compteModel->find($destinataire);
+    if(!$compteDestinataire){
+        return redirect()->back()->with('error', 'Le destinataire n\'existe pas.');
+    }
+
+    $compteExpediteur = $compteModel->find($numero);
+    if($compteExpediteur['solde'] < $montant){
+        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer le transfert.');
+    }
+
+    $compteModel->debiter($numero, $montant);
+    $compteModel->crediter($destinataire, $montant);
+    (new TransactionModel())->insert([
+        'type_operation' => 'transfert',
+        'expediteur'     => $numero,
+        'destinataire'   => $destinataire,
+        'montant'        => $montant,
+        'frais'          => 0,
+    ]);
+
+    return redirect()->to('dashboard')->with('message', 
+        'Transfert de ' . number_format($montant, 0, ',', ' ') . ' Ar vers le ' . $destinataire . ' réussi !');
+}
 }
