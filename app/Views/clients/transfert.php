@@ -21,6 +21,14 @@
           <input type="number" name="montant" class="form-control" placeholder="Montant en Ar" min="1" required>
         </div>
 
+       
+        <div class="mb-3 form-check">
+        <input type="checkbox" name="inclure_frais" value="1" class="form-check-input" id="inclureFrais">
+        <label class="form-check-label" for="inclureFrais">
+            Inclure les frais de retrait pour le destinataire (Même opérateur uniquement)
+        </label>
+        </div>
+
         <button class="btn btn-danger w-100"><i class="fa-solid fa-check me-1"></i>Confirmer le transfert</button>
       </form>
     </div>

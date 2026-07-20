@@ -109,10 +109,11 @@ public function transfert()
     $destinataireInput = $this->request->getPost('destinataire');
     $montantTotal = (float) $this->request->getPost('montant');
 
+    $inclureFrais = $this->request->getPost('inclure_frais') === '1';
+
     if($montantTotal <= 0){
         return redirect()->back()->with('error', 'Montant invalide.');
     }
-
 
     $destinataires = array_filter(array_map('trim', explode(',', $destinataireInput)));
     $nbDestinataires = count($destinataires);
@@ -121,15 +122,17 @@ public function transfert()
         return redirect()->back()->with('error', 'Veuillez saisir au moins un destinataire.');
     }
 
-    
     $montantParPersonne = $montantTotal / $nbDestinataires;
 
     $compteModel = new CompteModel();
     $operateurModel = new OperateurModel();
     $transactionModel = new TransactionModel();
+    $baremeModel = new BaremeModel();
 
-   
     $operateurInitialId = null;
+    $estInterne = false;
+
+  
     foreach ($destinataires as $dest) {
         if($dest === $numero){
             return redirect()->back()->with('error', 'Vous ne pouvez pas inclure votre propre numéro.');
@@ -140,20 +143,35 @@ public function transfert()
             return redirect()->back()->with('error', "Le destinataire {$dest} n'existe pas.");
         }
 
-       
         $operateurDest = $operateurModel->findByNumero($dest);
         $currentOperateurId = $operateurDest['id'] ?? null;
         
         if ($operateurInitialId === null) {
             $operateurInitialId = $currentOperateurId;
+       
+            $estInterne = isset($operateurDest['est_interne']) && $operateurDest['est_interne'] == 1;
         } elseif ($operateurInitialId !== $currentOperateurId) {
             return redirect()->back()->with('error', 'Tous les destinataires doivent appartenir au même opérateur.');
         }
     }
 
+
+    $fraisRetraitParPersonne = 0;
+    if ($inclureFrais) {
+        if ($estInterne) {
+ 
+            $fraisRetraitParPersonne = $baremeModel->calculerFrais('retrait', $montantParPersonne);
+        } else {
+            return redirect()->back()->with('error', 'L\'inclusion des frais n\'est pas disponible pour les autres opérateurs.');
+        }
+    }
+
+   
+    $totalADebiter = $montantTotal + ($fraisRetraitParPersonne * $nbDestinataires);
+
     $compteExpediteur = $compteModel->findByNumero($numero);
-    if($compteExpediteur['solde'] < $montantTotal){
-        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer l\'envoi multiple.');
+    if($compteExpediteur['solde'] < $totalADebiter){
+        return redirect()->back()->with('error', 'Solde insuffisant pour effectuer l\'envoi (Montant + Frais requis).');
     }
 
 
@@ -164,7 +182,10 @@ public function transfert()
         $operateurDest = $operateurModel->findByNumero($dest);
         $commission = $operateurModel->commission($dest, $montantParPersonne);
 
-        $compteModel->debiter($numero, $montantParPersonne);
+       
+        $compteModel->debiter($numero, $montantParPersonne + $fraisRetraitParPersonne);
+        
+
         $compteModel->crediter($dest, $montantParPersonne);
         
         $transactionModel->insert([
@@ -172,7 +193,7 @@ public function transfert()
             'expediteur'        => $numero,
             'destinataire'      => $dest,
             'montant'           => $montantParPersonne,
-            'frais'             => 0, 
+            'frais'             => $fraisRetraitParPersonne, 
             'id_operateur_dest' => $operateurDest['id'] ?? null,
             'commission'        => $commission,
         ]);
@@ -184,8 +205,12 @@ public function transfert()
         return redirect()->back()->with('error', 'Erreur lors de l\'envoi multiple.');
     }
 
-    return redirect()->to('dashboard')->with('message', 
-        'Envoi multiple de ' . number_format($montantTotal, 0, ',', ' ') . ' Ar réussi vers ' . $nbDestinataires . ' destinataire(s) !');
+    $msgSuccess = 'Envoi multiple réussi ! ';
+    if ($inclureFrais) {
+        $msgSuccess .= 'Les frais de retrait ont été pris en charge.';
+    }
+
+    return redirect()->to('dashboard')->with('message', $msgSuccess);
 }
 
 
