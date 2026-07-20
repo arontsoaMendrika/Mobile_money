@@ -9,7 +9,6 @@ class OperateurModel extends Model
     protected $allowedFields = ['nom', 'est_interne', 'commission_pct'];
     protected $returnType = 'array';
 
-    /** Retourne l'opérateur correspondant à un numéro, ou null si préfixe inconnu */
     public function findByNumero(string $numero): ?array
     {
         $numero = preg_replace('/\D/', '', $numero);
@@ -29,7 +28,7 @@ class OperateurModel extends Model
         return $op && (int) $op['est_interne'] === 1;
     }
 
-    /** Commission en Ariary pour un transfert vers ce numéro */
+
     public function commission(string $numero, float $montant): float
     {
         $op = $this->findByNumero($numero);

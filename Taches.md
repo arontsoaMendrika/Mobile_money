@@ -11,47 +11,50 @@
 
 ---
 
-##  Version 1 : Système Mobile Money (Livraison v1)
+## Version 1 : Système Mobile Money (Livraison v1)
 
-###  Architecture & Base de données
-- [x] Création du script `base.sql` (Tables : configuration, comptes, baremes, transactions) - **Mendrika**
-- [x] Configuration de la base SQLite dans CodeIgniter 4 (`Database.php`) - **Mendrika**
-- [x] Création des Modèles CI4 (`CompteModel`, `TransactionModel`, `BaremeModel`) - **Mandresy**
+### Architecture & Base de données
+- [x] Création du script base.sql (Tables : configuration, comptes, baremes, transactions) - Mendrika
+- [x] Configuration de la base SQLite dans CodeIgniter 4 (Database.php) - Mendrika
+- [x] Création des Modèles CI4 (CompteModel, TransactionModel, BaremeModel) - Mandresy
 
-###  Côté Client
-- [x] Interface et Route de connexion par numéro de téléphone - **Mandresy**
-- [x] Système de Login automatique (création de compte si inexistant) en Contrôleur - **Mendrika**
-- [x] Interface du tableau de bord client (Affichage solde et historique) - **Mandresy**
-- [x] Fonctionnalité de Dépôt (sans frais) - **Mendrika**
-- [x] Fonctionnalité de Retrait (avec application du barème de frais) - **Mandresy**
-- [x] Fonctionnalité de Transfert (vérification solde + destinataire + frais) - **Mendrika**
+### Côté Client
+- [x] Interface et Route de connexion par numéro de téléphone - Mandresy
+- [x] Système de Login automatique (création de compte si inexistant) en Contrôleur - Mendrika
+- [x] Interface du tableau de bord client (Affichage solde et historique) - Mandresy
+- [x] Fonctionnalité de Dépôt (sans frais) - Mendrika
+- [x] Fonctionnalité de Retrait (avec application du barème de frais) - Mandresy
+- [x] Fonctionnalité de Transfert (vérification solde + destinataire + frais) - Mendrika
 
-###  Côté Opérateur
-- [x] Interface du tableau de bord Opérateur (Situation des comptes) - **Mandresy**
-- [x] Calcul et affichage du gain total via les frais perçus - **Mendrika**
-- [x] Configuration des préfixes valides et gestion des barèmes de frais - **Mandresy**
+### Côté Opérateur
+- [x] Interface du tableau de bord Opérateur (Situation des comptes) - Mandresy
+- [x] Calcul et affichage du gain total via les frais perçus - Mendrika
+- [x] Configuration des préfixes valides et gestion des barèmes de frais - Mandresy
 
 ---
 
 ## Version 2 : Évolution Inter-Opérateurs et Options Avancées (Livraison v2)
 
-### Côté Opérateur
-- [ ] Configuration des préfixes valables pour les autres opérateurs (ex: 032 et 031, ...) - **Mandresy**
-  - [ ] Modifier la table `configuration` (ou créer une table `operateurs`) pour lister les préfixes concurrents.
-  - [ ] Mettre à jour la vue et le contrôleur `Admin\Config` pour saisir ces préfixes.
-- [ ] Configuration du pourcentage (%) en plus de commissions pour les transferts vers les autres opérateurs - **Mendrika**
-  - [ ] Ajouter un champ `frais_inter_operateur` dans la configuration.
-  - [ ] Intégrer ce pourcentage dans la logique de calcul des frais de transfert.
-- [ ] Sur la page "Situation gain via les différents frais", séparer opérateur et autres opérateurs - **Mendrika**
-  - [ ] Modifier la requête SQL de l'historique pour filtrer les gains par type d'opérateur.
-  - [ ] Mettre à jour l'affichage avec deux colonnes ou tableaux distincts.
-- [ ] Situation des montants à envoyer à chaque opérateur - **Mandresy**
-  - [ ] Créer un tableau récapitulatif calculant la somme des transferts sortants par préfixe.
+### Côté Opérateur (Gestion des commissions & préfixes)
 
-### Côté Client
-- [ ] Option inclure frais de retrait lors de l'envoi - **Mandresy**
-  - [ ] Ajouter une case à cocher dans la vue du formulaire de transfert.
-  - [ ] Modifier le contrôleur pour calculer et soustraire les frais du montant reçu si cochée.
-- [ ] Envoi multiple vers plusieurs numéros (divisé le montant pour chaque numéro) - **Mendrika**
-  - [ ] Adapter le champ numéro pour accepter une liste (ex: séparée par des virgules).
-  - [ ] Diviser le montant total par le nombre de numéros valides et exécuter une boucle de transfert.
+#### Tâches de Mandresy :
+- [x] Modélisation et création des nouvelles tables operateur et prefixe dans le script SQL.
+- [x] Implémentation de la logique métier dans OperateurModel.php (findByNumero, estInterne, commission).
+- [ ] Interface et situation des montants cumulés à envoyer à chaque opérateur tiers.
+
+#### Tâches de Mendrika :
+- [x] Création et configuration initiale du modèle PrefixeModel.php.
+- [x] Mise à jour du contrôleur Config.php avec la méthode operateurs() pour charger les données des commissions.
+- [ ] [EN COURS] Création de la méthode saveCommissions() dans le contrôleur Config.php pour sauvegarder les taux modifiés par l'administrateur.
+- [ ] Conception de la vue d'administration admin/operateurs.php pour la mise à jour des commissions.
+- [ ] Modification de la page "Situation gain" dans Dashboard.php pour séparer les gains internes et inter-opérateurs.
+
+### Côté Client (Fonctionnalités avancées)
+
+#### Tâches de Mandresy :
+- [ ] Intégration de l'option de case à cocher "Inclure les frais de retrait" dans le formulaire de transfert.
+- [ ] Adaptation du contrôleur de transfert pour calculer et déduire les frais du montant reçu.
+
+#### Tâches de Mendrika :
+- [ ] Modification de la vue du formulaire de transfert pour autoriser la saisie de numéros multiples séparés par des virgules.
+- [ ] Développement de la logique d'envoi multiple (nettoyage de la chaîne, division équitable du montant et boucle de transactions).

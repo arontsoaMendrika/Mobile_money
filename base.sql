@@ -31,9 +31,6 @@ CREATE TABLE transactions (
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
-
-
 CREATE TABLE operateur (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom VARCHAR(50) NOT NULL,

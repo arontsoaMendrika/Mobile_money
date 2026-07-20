@@ -2,10 +2,19 @@
 namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\BaremeModel;
+use App\Models\OperateurModel;
 use Config\Database;
 
 class Config extends BaseController
 {
+    public function operateurs()
+    {
+       $operateurModel= new OperateurModel();
+       $listeOperateurs= $operateurModel->findAll();
+       
+       return view('admin/operateurs', ['operateurs' => $listeOperateurs]);
+    }
+
     public function prefixes()
     {
         $db = Database::connect();
