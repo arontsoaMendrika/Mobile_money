@@ -13,7 +13,7 @@ class Operation extends BaseController
         $numero = session('numero');
         if (!$numero) return redirect()->to('/');
 
-        return view('client/dashboard', [
+        return view('clients/dashboard', [
             'compte'     => (new CompteModel())->findByNumero($numero),
             'historique' => (new TransactionModel())->historique($numero),
             'numero'     => $numero,
@@ -26,7 +26,7 @@ public function retraitForm()
     $numero = session('numero');
     if (!$numero) return redirect()->to('/');
 
-    return view('client/retrait', [
+    return view('clients/retrait', [
         'compte'  => (new CompteModel())->findByNumero($numero),
         'baremes' => (new BaremeModel())->where('type_operation','retrait')->findAll(),
     ]);
@@ -117,12 +117,12 @@ public function transfert()
     }
 
     $compteModel = new CompteModel();
-    $compteDestinataire = $compteModel->find($destinataire);
+    $compteDestinataire = $compteModel->findByNumero($destinataire);
     if(!$compteDestinataire){
         return redirect()->back()->with('error', 'Le destinataire n\'existe pas.');
     }
 
-    $compteExpediteur = $compteModel->find($numero);
+    $compteExpediteur = $compteModel->findByNumero($numero);
     if($compteExpediteur['solde'] < $montant){
         return redirect()->back()->with('error', 'Solde insuffisant pour effectuer le transfert.');
     }
@@ -150,9 +150,9 @@ public function formulaireTransfert()
 
  
     $compteModel = new CompteModel();
-    $data['compte'] = $compteModel->find($numero);
+    $data['compte'] = $compteModel->findByNumero($numero);
 
-  
+
     return view('clients/transfert', $data);
 }
 
@@ -164,9 +164,9 @@ public function formulaireDepot()
 
   
     $compteModel = new CompteModel();
-    $data['compte'] = $compteModel->find($numero);
+    $data['compte'] = $compteModel->findByNumero($numero);
 
-   
+
     return view('clients/depot', $data);
 }
 
