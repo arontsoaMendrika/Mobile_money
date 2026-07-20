@@ -4,6 +4,7 @@ use App\Controllers\BaseController;
 use App\Models\CompteModel;
 use App\Models\TransactionModel;
 use App\Models\BaremeModel;
+use App\Models\OperateurModel;
 use Config\Database;
 
 class Operation extends BaseController
@@ -127,14 +128,20 @@ public function transfert()
         return redirect()->back()->with('error', 'Solde insuffisant pour effectuer le transfert.');
     }
 
+    $operateurModel = new OperateurModel();
+    $operateurDest = $operateurModel->findByNumero($destinataire);
+    $commission = $operateurModel->commission($destinataire, $montant);
+
     $compteModel->debiter($numero, $montant);
     $compteModel->crediter($destinataire, $montant);
     (new TransactionModel())->insert([
-        'type_operation' => 'transfert',
-        'expediteur'     => $numero,
-        'destinataire'   => $destinataire,
-        'montant'        => $montant,
-        'frais'          => 0,
+        'type_operation'    => 'transfert',
+        'expediteur'        => $numero,
+        'destinataire'      => $destinataire,
+        'montant'           => $montant,
+        'frais'             => 0,
+        'id_operateur_dest' => $operateurDest['id'] ?? null,
+        'commission'        => $commission,
     ]);
 
     return redirect()->to('dashboard')->with('message', 

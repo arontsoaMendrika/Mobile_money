@@ -6,7 +6,7 @@ class TransactionModel extends Model
 {
     protected $table = 'transactions';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['type_operation','expediteur','destinataire','montant','frais'];
+    protected $allowedFields = ['type_operation','expediteur','destinataire','montant','frais','id_operateur_dest','commission'];
     protected $returnType = 'array';
 
     public function historique(string $numero)

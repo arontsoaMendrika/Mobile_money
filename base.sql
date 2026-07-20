@@ -26,6 +26,8 @@ CREATE TABLE transactions (
     destinataire VARCHAR(15),            -- NULL si c'est un retrait
     montant REAL NOT NULL,
     frais REAL NOT NULL DEFAULT 0.0,
+    id_operateur_dest INTEGER REFERENCES operateur(id), -- opérateur du destinataire (transferts)
+    commission REAL NOT NULL DEFAULT 0.0,               -- commission reversée à l'opérateur externe
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
