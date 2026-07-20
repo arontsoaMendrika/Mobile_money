@@ -9,7 +9,7 @@
     <div class="card-body">
       <form method="post" action="<?= site_url('admin/prefixes') ?>">
         <?= csrf_field() ?>
-        <label class="form-label">Préfixes valides (séparés par des virgules)</label>
+        <label class="form-label">Préfixes valides </label>
         <input type="text" name="valeur" class="form-control mb-3" value="<?= $valeur ?>" placeholder="033,037">
         <button class="btn btn-primary">Enregistrer</button>
         <a href="<?= site_url('admin/dashboard') ?>" class="btn btn-link">Dashboard</a>
