@@ -7,14 +7,6 @@ use Config\Database;
 
 class Config extends BaseController
 {
-    public function operateurs()
-    {
-       $operateurModel= new OperateurModel();
-       $listeOperateurs= $operateurModel->findAll();
-       
-       return view('admin/operateurs', ['operateurs' => $listeOperateurs]);
-    }
-
     public function prefixes()
     {
         $db = Database::connect();
@@ -60,5 +52,27 @@ class Config extends BaseController
     {
         (new BaremeModel())->delete($id);
         return redirect()->back()->with('message', 'Tranche supprimée.');
+    }
+
+       public function operateurs()
+    {
+       $operateurModel= new OperateurModel();
+       $listeOperateurs= $operateurModel->findAll();
+       
+       return view('admin/operateurs', ['operateurs' => $listeOperateurs]);
+    }
+
+    public function saveCommissions()
+    {
+        $operateurModel = new OperateurModel();
+        $commissions = $this->request->getPost('commissions');
+
+        if($commissions){
+            foreach($commissions as $id => $taux){
+                $operateurModel->update($id, ['commission_pct' => $taux]);
+            }
+        }
+
+        return redirect()->back()->with('message', 'Commissions mises à jour.');
     }
 }
