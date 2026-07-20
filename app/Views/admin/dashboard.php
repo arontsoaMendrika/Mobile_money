@@ -6,6 +6,8 @@
     <div>
       <a href="<?= site_url('admin/prefixes') ?>" class="btn btn-sm btn-outline-light">Préfixes</a>
       <a href="<?= site_url('admin/baremes') ?>" class="btn btn-sm btn-outline-light">Barèmes</a>
+      <a href="<?= site_url('admin/operateurs') ?>" class="btn btn-sm btn-outline-light">Opérateurs</a>
+      <a href="<?= site_url('admin/reversements') ?>" class="btn btn-sm btn-outline-light">Reversements</a>
     </div>
   </div>
 </nav>

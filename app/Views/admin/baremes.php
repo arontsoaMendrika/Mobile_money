@@ -47,5 +47,11 @@
     </div>
     <?php } ?>
   </div>
+  <div class="form-check mb-3">
+  <input class="form-check-input" type="checkbox" name="frais_inclus" value="1" id="fi">
+  <label class="form-check-label" for="fi">
+    Inclure les frais dans le montant (le destinataire reçoit moins)
+  </label>
+</div>
 </div>
 <?= $this->endSection() ?>
