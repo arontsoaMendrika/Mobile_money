@@ -30,3 +30,28 @@
 - [x] Interface du tableau de bord Opérateur (Situation des comptes) - **Mandresy**
 - [x] Calcul et affichage du gain total via les frais perçus - **Mendrika**
 - [x] Configuration des préfixes valides et gestion des barèmes de frais - **Mandresy**
+
+---
+
+## Version 2 : Évolution Inter-Opérateurs et Options Avancées (Livraison v2)
+
+### Côté Opérateur
+- [ ] Configuration des préfixes valables pour les autres opérateurs (ex: 032 et 031, ...) - **Mandresy**
+  - [ ] Modifier la table `configuration` (ou créer une table `operateurs`) pour lister les préfixes concurrents.
+  - [ ] Mettre à jour la vue et le contrôleur `Admin\Config` pour saisir ces préfixes.
+- [ ] Configuration du pourcentage (%) en plus de commissions pour les transferts vers les autres opérateurs - **Mendrika**
+  - [ ] Ajouter un champ `frais_inter_operateur` dans la configuration.
+  - [ ] Intégrer ce pourcentage dans la logique de calcul des frais de transfert.
+- [ ] Sur la page "Situation gain via les différents frais", séparer opérateur et autres opérateurs - **Mendrika**
+  - [ ] Modifier la requête SQL de l'historique pour filtrer les gains par type d'opérateur.
+  - [ ] Mettre à jour l'affichage avec deux colonnes ou tableaux distincts.
+- [ ] Situation des montants à envoyer à chaque opérateur - **Mandresy**
+  - [ ] Créer un tableau récapitulatif calculant la somme des transferts sortants par préfixe.
+
+### Côté Client
+- [ ] Option inclure frais de retrait lors de l'envoi - **Mandresy**
+  - [ ] Ajouter une case à cocher dans la vue du formulaire de transfert.
+  - [ ] Modifier le contrôleur pour calculer et soustraire les frais du montant reçu si cochée.
+- [ ] Envoi multiple vers plusieurs numéros (divisé le montant pour chaque numéro) - **Mendrika**
+  - [ ] Adapter le champ numéro pour accepter une liste (ex: séparée par des virgules).
+  - [ ] Diviser le montant total par le nombre de numéros valides et exécuter une boucle de transfert.
