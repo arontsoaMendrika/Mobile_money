@@ -1,41 +1,30 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
-<nav class="navbar navbar-dark bg-dark mb-4">
-  <div class="container">
-    <span class="navbar-brand">Espace Opérateur</span>
-    <div>
-      <a href="<?= site_url('admin/prefixes') ?>" class="btn btn-sm btn-outline-light">Préfixes</a>
-      <a href="<?= site_url('admin/baremes') ?>" class="btn btn-sm btn-outline-light">Barèmes</a>
-      <a href="<?= site_url('admin/operateurs') ?>" class="btn btn-sm btn-outline-light">Opérateurs</a>
-      <a href="<?= site_url('admin/reversements') ?>" class="btn btn-sm btn-outline-light">Reversements</a>
-    </div>
-  </div>
-</nav>
+  <h4 class="mb-4"><i class="fa-solid fa-gauge me-2"></i>Espace Opérateur</h4>
 
-<div class="container">
   <div class="row g-3 mb-4">
     <div class="col-md-4">
       <div class="card text-center"><div class="card-body">
-        <div class="text-muted">Gain total (frais)</div>
+        <div class="text-muted"><i class="fa-solid fa-coins me-1"></i>Gain total (frais)</div>
         <h3 class="text-success"><?= number_format($gainTotal,0,',',' ') ?> Ar</h3>
       </div></div>
     </div>
     <div class="col-md-4">
       <div class="card text-center"><div class="card-body">
-        <div class="text-muted">Masse monétaire clients</div>
+        <div class="text-muted"><i class="fa-solid fa-sack-dollar me-1"></i>Masse monétaire clients</div>
         <h3><?= number_format($masseTotale,0,',',' ') ?> Ar</h3>
       </div></div>
     </div>
     <div class="col-md-4">
       <div class="card text-center"><div class="card-body">
-        <div class="text-muted">Nombre de comptes</div>
+        <div class="text-muted"><i class="fa-solid fa-users me-1"></i>Nombre de comptes</div>
         <h3><?= count($comptes) ?></h3>
       </div></div>
     </div>
   </div>
 
   <div class="card mb-4">
-    <div class="card-header">Gains par type d'opération</div>
+    <div class="card-header"><i class="fa-solid fa-chart-column me-1"></i>Gains par type d'opération</div>
     <table class="table mb-0">
       <thead><tr><th>Type</th><th>Nb opérations</th><th>Volume</th><th>Frais perçus</th></tr></thead>
       <tbody>
