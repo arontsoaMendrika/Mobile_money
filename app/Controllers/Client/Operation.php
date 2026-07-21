@@ -5,7 +5,6 @@ use App\Models\CompteModel;
 use App\Models\TransactionModel;
 use App\Models\BaremeModel;
 use App\Models\OperateurModel;
-use App\Models\PromotionModel;
 use Config\Database;
 
 class Operation extends BaseController
@@ -129,7 +128,6 @@ public function transfert()
     $operateurModel = new OperateurModel();
     $transactionModel = new TransactionModel();
     $baremeModel = new BaremeModel();
-    $promotionModel = new PromotionModel();
 
     $operateurInitialId = null;
     $estInterne = false;
@@ -188,8 +186,12 @@ public function transfert()
        
         $compteModel->debiter($numero, $montantParPersonne + $fraisRetraitParPersonne);
         
-
-        $compteModel->crediter($dest, $montantParPersonne);
+            if ($epargnemodel->verify($id_compte_client)==true) {
+                 $compteModel->crediter($dest, $montantParPersonne-($epargnemodel->getPourcentage($id_compte_client)));
+            }else{
+                 $compteModel->crediter($dest, $montantParPersonne);
+            }
+       
         
         $transactionModel->insert([
             'type_operation'    => 'transfert',
@@ -244,5 +246,14 @@ public function formulaireDepot()
 
     return view('clients/depot', $data);
 }
-
+public function epargner(){
+    $numero = session('numero');
+     $compteModel = new CompteModel();
+    $id_compte_client = $compteModel->findByNumero($numero);
+    if ($this->request->getPost('epargne_pct')) {
+        $pourcentage=$this->request->getPost('epargne_pct');
+       $epargner = new EpargnerModel()->epargner($pourcentage, $id_compte_client );
+    }
+    return view('clients/epargne');
+}
 }

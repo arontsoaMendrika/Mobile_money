@@ -58,14 +58,3 @@
 #### Tâches de Mendrika :
 - [x] Modification de la vue du formulaire de transfert pour autoriser la saisie de numéros multiples séparés par des virgules.
 - [x] Développement de la logique d'envoi multiple (nettoyage de la chaîne, division équitable du montant et boucle de transactions).
-
-promotion en pourcentage am frais de transfert makany am meme operateur (de meme)
-tsy maintsy ampirimina any anaty base ny pourcentage 
-ex:50% d mihena aminio raha meme operateur
-bonus page modifier pourcenatge
-
-## Aleat:
-- [x] Creation table promotion 
-
-- modification fonction transfert pour integere promotion si meme operateur (prefixe)
-- 

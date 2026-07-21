@@ -54,5 +54,3 @@ INSERT INTO operateur (nom, est_interne, commission_pct) VALUES
 
 INSERT INTO prefixe (valeur, id_operateur) VALUES
  ('033',1),('037',1),('032',2),('034',2),('031',3),('038',3);
-
- INSERT INTO promotion (valeur) VALUES (50.00);
