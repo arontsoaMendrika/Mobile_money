@@ -44,8 +44,15 @@ CREATE TABLE prefixe (
     id_operateur INTEGER NOT NULL REFERENCES operateur(id)
 );
 
+CREATE TABLE promotion(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valeur REAL NOT NULL DEFAULT 0.0
+);
+
 INSERT INTO operateur (nom, est_interne, commission_pct) VALUES
  ('MonOperateur', 1, 0), ('Orange', 0, 2.0), ('Airtel', 0, 1.5);
 
 INSERT INTO prefixe (valeur, id_operateur) VALUES
  ('033',1),('037',1),('032',2),('034',2),('031',3),('038',3);
+
+ INSERT INTO promotion (valeur) VALUES (50.00);

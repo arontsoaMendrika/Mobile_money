@@ -5,6 +5,7 @@ use App\Models\CompteModel;
 use App\Models\TransactionModel;
 use App\Models\BaremeModel;
 use App\Models\OperateurModel;
+use App\Models\PromotionModel;
 use Config\Database;
 
 class Operation extends BaseController
@@ -128,6 +129,7 @@ public function transfert()
     $operateurModel = new OperateurModel();
     $transactionModel = new TransactionModel();
     $baremeModel = new BaremeModel();
+    $promotionModel = new PromotionModel();
 
     $operateurInitialId = null;
     $estInterne = false;
@@ -159,8 +161,9 @@ public function transfert()
     $fraisRetraitParPersonne = 0;
     if ($inclureFrais) {
         if ($estInterne) {
- 
-            $fraisRetraitParPersonne = $baremeModel->calculerFrais('retrait', $montantParPersonne);
+            $fraisTotal= $baremeModel->calculerFrais('retrait', $montantParPersonne);
+            $reductionFrais= $promotionModel->getPromotion('valeur');
+            $fraisRetraitParPersonne = $fraisTotal - $reductionFrais;
         } else {
             return redirect()->back()->with('error', 'L\'inclusion des frais n\'est pas disponible pour les autres opérateurs.');
         }

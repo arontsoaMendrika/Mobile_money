@@ -62,5 +62,12 @@ class Config extends BaseController
        return view('admin/operateurs', ['operateurs' => $listeOperateurs]);
     }
 
+     public function promotion()
+    {
+        $db = Database::connect();
+        $row = $db->table('promotion')->where('cle','prefixes')->get()->getRowArray();
+        return view('admin/prefixes', ['valeur' => $row['valeur'] ?? '']);
+    }
+
 
 }
