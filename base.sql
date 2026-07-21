@@ -49,3 +49,13 @@ INSERT INTO operateur (nom, est_interne, commission_pct) VALUES
 
 INSERT INTO prefixe (valeur, id_operateur) VALUES
  ('033',1),('037',1),('032',2),('034',2),('031',3),('038',3);
+
+ CREATE TABLE compte_epargne(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_compte_client INTEGER REFERENCES compte_client(id),
+    solde REAL NOT NULL DEFAULT 0.0
+ );
+ CREATE TABLE pourcentage_epargne(
+    id_compte_client INTEGER REFERENCES compte_client(id),
+    pourcentage_epargne REAL NOT NULL DEFAULT 0
+ )

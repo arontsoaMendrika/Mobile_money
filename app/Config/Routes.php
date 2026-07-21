@@ -31,3 +31,4 @@ $routes->group('admin', function($routes) {
     $routes->get('prefixe/delete/(:num)', 'Admin\Operateurs::deletePrefixe/$1');
     $routes->get('reversements', 'Admin\Rapport::reversements');
 });
+$routes->post('epargner', 'Client\Operation::epargner');

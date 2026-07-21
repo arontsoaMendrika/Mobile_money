@@ -58,3 +58,10 @@
 #### Tâches de Mendrika :
 - [x] Modification de la vue du formulaire de transfert pour autoriser la saisie de numéros multiples séparés par des virgules.
 - [x] Développement de la logique d'envoi multiple (nettoyage de la chaîne, division équitable du montant et boucle de transactions).
+
+epargne
+pour chaque client
+page: 20% no epargner-kou
+rehefa misy transfert any aminy
+20->erparne
+80->kany am principal

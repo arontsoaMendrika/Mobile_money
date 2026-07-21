@@ -71,6 +71,7 @@
         <a href="<?= site_url('depot') ?>" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-arrow-down me-1"></i>Dépôt</a>
         <a href="<?= site_url('retrait') ?>" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-arrow-up me-1"></i>Retrait</a>
         <a href="<?= site_url('transfert') ?>" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-right-left me-1"></i>Transfert</a>
+        <a href="<?= site_url('epargner') ?>" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-right-left me-1"></i>Epargner</a>
         <span class="text-white-50 small ms-1"><?= session()->get('numero') ?></span>
         <a href="<?= site_url('logout') ?>" class="btn btn-sm btn-light"><i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion</a>
       </div>
